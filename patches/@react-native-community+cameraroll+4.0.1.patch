@@ -1,5 +1,5 @@
 diff --git a/node_modules/@react-native-community/cameraroll/android/src/main/java/com/reactnativecommunity/cameraroll/CameraRollModule.java b/node_modules/@react-native-community/cameraroll/android/src/main/java/com/reactnativecommunity/cameraroll/CameraRollModule.java
-index b13e570..b681c45 100644
+index b13e570..4532b99 100644
 --- a/node_modules/@react-native-community/cameraroll/android/src/main/java/com/reactnativecommunity/cameraroll/CameraRollModule.java
 +++ b/node_modules/@react-native-community/cameraroll/android/src/main/java/com/reactnativecommunity/cameraroll/CameraRollModule.java
 @@ -9,6 +9,7 @@ package com.reactnativecommunity.cameraroll;
@@ -43,7 +43,7 @@ index b13e570..b681c45 100644
        try {
          boolean isAlbumPresent = !"".equals(mOptions.getString("album"));
 +        String topFolderName;
- 
+         
 -        final File environment;
          // Media is not saved into an album when using Environment.DIRECTORY_DCIM.
          if (isAlbumPresent) {
@@ -159,6 +159,51 @@ index b13e570..b681c45 100644
              null,
              new MediaScannerConnection.OnScanCompletedListener() {
                @Override
+@@ -400,7 +433,7 @@ public class CameraRollModule extends ReactContextBaseJavaModule {
+             mPromise.resolve(response);
+           }
+         }
+-      } catch (SecurityException e) {
++      } catch (SecurityException | IOException e) {
+         mPromise.reject(
+             ERROR_UNABLE_TO_LOAD_PERMISSION,
+             "Could not get media: need READ_EXTERNAL_STORAGE permission",
+@@ -495,7 +528,7 @@ public class CameraRollModule extends ReactContextBaseJavaModule {
+       Cursor media,
+       WritableMap response,
+       int limit,
+-      Set<String> include) {
++      Set<String> include) throws IOException {
+     WritableArray edges = new WritableNativeArray();
+     media.moveToFirst();
+     int mimeTypeIndex = media.getColumnIndex(Images.Media.MIME_TYPE);
+@@ -562,7 +595,7 @@ public class CameraRollModule extends ReactContextBaseJavaModule {
+       boolean includeFilename,
+       boolean includeFileSize,
+       boolean includeImageSize,
+-      boolean includePlayableDuration) {
++      boolean includePlayableDuration) throws IOException {
+     WritableMap image = new WritableNativeMap();
+     Uri photoUri = Uri.parse("file://" + media.getString(dataIndex));
+     image.putString("uri", photoUri.toString());
+@@ -600,7 +633,7 @@ public class CameraRollModule extends ReactContextBaseJavaModule {
+       WritableMap image,
+       Uri photoUri,
+       boolean isVideo,
+-      boolean includePlayableDuration) {
++      boolean includePlayableDuration) throws IOException {
+     image.putNull("playableDuration");
+ 
+     if (!includePlayableDuration || !isVideo) {
+@@ -659,7 +692,7 @@ public class CameraRollModule extends ReactContextBaseJavaModule {
+       int heightIndex,
+       Uri photoUri,
+       boolean isVideo,
+-      boolean includeImageSize) {
++      boolean includeImageSize) throws IOException {
+     image.putNull("width");
+     image.putNull("height");
+ 
 diff --git a/node_modules/@react-native-community/cameraroll/android/src/main/java/com/reactnativecommunity/cameraroll/Utils.java b/node_modules/@react-native-community/cameraroll/android/src/main/java/com/reactnativecommunity/cameraroll/Utils.java
 new file mode 100644
 index 0000000..880802c
