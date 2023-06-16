@@ -11,9 +11,6 @@ generate_mendix_delegate
 # Force firebase to use the non-add version of its library
 $RNFirebaseAnalyticsWithoutAdIdSupport=true
 
-# Force libraries to disable hermes usage
-ENV["USE_HERMES"] = "0"
-
 def common_pods
   # Comment the next line if you don't want to use dynamic frameworks
   # use_frameworks!
@@ -22,8 +19,7 @@ def common_pods
   config = use_native_modules!
   use_react_native!(
     :path => config[:reactNativePath],
-    # Hermes is disabled by default to avoid incompatibilities and slowness with Mendix Runtime.
-    :hermes_enabled => false,
+    :hermes_enabled => true,
     :fabric_enabled => false,
     # Enables Flipper.
     #
