@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [7.0.9] - 2023-10-13
+
 ### Fixed
 
 - We fixed build errors caused by the recent XCode 15 update.
